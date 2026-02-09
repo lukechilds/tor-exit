@@ -222,7 +222,7 @@
 
     function formatUptime(dateStr) {
       if (!dateStr) return 'Unknown';
-      const diff = Date.now() - new Date(dateStr + ' UTC').getTime();
+      const diff = Date.now() - new Date(dateStr.replace(' ', 'T') + 'Z').getTime();
       if (isNaN(diff)) return 'Unknown';
       const days = Math.floor(diff / 86400000);
       if (days >= 365) {
