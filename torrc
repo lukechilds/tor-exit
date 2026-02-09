@@ -1,0 +1,14 @@
+DataDirectory /data
+
+ORPort 9001
+ControlPort 9051
+
+Nickname lukechilds
+ContactInfo Luke Childs <tor-exit@lu.ke>
+
+ExitRelay 1
+
+AccountingStart month 1 00:00
+AccountingMax 5000 GBytes
+RelayBandwidthRate 2 MBytes
+RelayBandwidthBurst 6 MBytes

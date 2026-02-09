@@ -1,0 +1,10 @@
+services:
+  tor-exit:
+    build: .
+    container_name: tor-exit
+    restart: always
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./torrc:/etc/tor/torrc
+      - ./data:/data
