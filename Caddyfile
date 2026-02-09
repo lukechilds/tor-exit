@@ -1,0 +1,4 @@
+tor-exit.lu.ke {
+	root * /srv
+	file_server
+}

@@ -8,3 +8,20 @@ services:
     volumes:
       - ./torrc:/etc/tor/torrc
       - ./data:/data
+
+  web:
+    image: caddy:2.10.2-alpine@sha256:7f4c19ed8c32f961644681823de1a2fe5b74c84a45d0f3995286010c84b6c554
+    container_name: tor-exit-web
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./exit-notice.html:/srv/index.html:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
