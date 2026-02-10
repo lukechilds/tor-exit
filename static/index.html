@@ -146,10 +146,18 @@
       height: 80px;
       margin-top: 0.5rem;
     }
+    .chart-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .chart-more {
+      font-size: 0.75rem;
+    }
     .chart-legend {
       display: flex;
       gap: 1rem;
-      margin-top: 0.5rem;
       font-size: 0.75rem;
       color: #666;
     }
@@ -230,9 +238,12 @@
         <div class="stat stat-wide">
           <div class="stat-label">Daily Traffic (6 months)</div>
           <canvas class="chart" id="chart"></canvas>
-          <div class="chart-legend">
-            <span class="chart-legend-item"><span class="chart-legend-color read"></span>Read</span>
-            <span class="chart-legend-item"><span class="chart-legend-color write"></span>Write</span>
+          <div class="chart-footer">
+            <div class="chart-legend">
+              <span class="chart-legend-item"><span class="chart-legend-color read"></span>Read</span>
+              <span class="chart-legend-item"><span class="chart-legend-color write"></span>Write</span>
+            </div>
+            <a class="chart-more" href="https://metrics.torproject.org/rs.html#details/DE529B21A8A67AB8CA40329044FB4708D39E437C">View more</a>
           </div>
         </div>
       </div>
