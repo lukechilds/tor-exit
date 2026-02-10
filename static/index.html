@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tor Exit Node</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -27,6 +28,12 @@
     }
     a:hover {
       text-decoration: underline;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 1rem;
+      width: 80px;
+      height: 80px;
     }
     .hero {
       margin-bottom: 1.25rem;
@@ -176,6 +183,13 @@
   <main>
     <div id="relay-info" class="hidden">
       <div class="hero">
+        <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="none" stroke="#7e57c2" stroke-width="1.5" opacity="0.15"/>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="#7e57c2" stroke-width="1.5" opacity="0.25"/>
+          <circle cx="50" cy="50" r="24" fill="none" stroke="#7e57c2" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="50" cy="50" r="12" fill="none" stroke="#7e57c2" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="50" cy="50" r="3" fill="#7e57c2" opacity="0.8"/>
+        </svg>
         <div class="hero-nickname">
           <span class="indicator" id="status-indicator"></span>
           <span id="nickname"></span>
