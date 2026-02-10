@@ -179,8 +179,8 @@
 
       <div class="stats">
         <div class="stat">
-          <div class="stat-label">Uptime</div>
-          <div class="stat-value" id="uptime"></div>
+          <div class="stat-label">Online For</div>
+          <div class="stat-value" id="online-since"></div>
         </div>
         <div class="stat">
           <div class="stat-label">Relay Type</div>
@@ -233,17 +233,28 @@
       return bytes.toFixed(i > 0 ? 1 : 0) + ' ' + units[i];
     }
 
-    function formatUptime(dateStr) {
+    function formatDuration(dateStr) {
       if (!dateStr) return 'Unknown';
-      const diff = Date.now() - new Date(dateStr.replace(' ', 'T') + 'Z').getTime();
-      if (isNaN(diff)) return 'Unknown';
-      const days = Math.floor(diff / 86400000);
-      if (days >= 365) {
-        const years = Math.floor(days / 365);
-        const rem = days % 365;
-        return years + 'y ' + rem + 'd';
+      const start = new Date(dateStr.replace(' ', 'T') + 'Z');
+      if (isNaN(start)) return 'Unknown';
+      const now = new Date();
+      let years = now.getUTCFullYear() - start.getUTCFullYear();
+      let months = now.getUTCMonth() - start.getUTCMonth();
+      let days = now.getUTCDate() - start.getUTCDate();
+      if (days < 0) {
+        months--;
+        const prev = new Date(now.getUTCFullYear(), now.getUTCMonth(), 0);
+        days += prev.getDate();
       }
-      return days + ' days';
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      const parts = [];
+      if (years > 0) parts.push(years + (years === 1 ? ' year' : ' years'));
+      if (months > 0) parts.push(months + (months === 1 ? ' month' : ' months'));
+      if (years === 0 && months === 0) parts.push(days + (days === 1 ? ' day' : ' days'));
+      return parts.join(' ') || '0 days';
     }
 
     function drawChart(canvas, writeHistory, readHistory) {
@@ -305,7 +316,7 @@
 
         document.getElementById('nickname').textContent = relay.nickname;
         document.getElementById('fingerprint').textContent = relay.fingerprint;
-        document.getElementById('uptime').textContent = formatUptime(relay.last_restarted);
+        document.getElementById('online-since').textContent = formatDuration(relay.first_seen);
         document.getElementById('version').textContent = relay.version;
 
         const flagsEl = document.getElementById('flags');
