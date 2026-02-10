@@ -143,7 +143,7 @@
     }
     .chart {
       width: 100%;
-      height: 80px;
+      height: 96px;
       margin-top: 0.5rem;
     }
     .chart-footer {
@@ -236,7 +236,7 @@
           <div class="flags" id="flags"></div>
         </div>
         <div class="stat stat-wide">
-          <div class="stat-label">Daily Traffic (6 months)</div>
+          <div class="stat-label" id="chart-label">Daily Traffic</div>
           <canvas class="chart" id="chart"></canvas>
           <div class="chart-footer">
             <div class="chart-legend">
@@ -315,6 +315,8 @@
 
       const w = rect.width;
       const h = rect.height;
+      const dateH = 16;
+      const chartH = h - dateH;
 
       const wFactor = Number(writeHistory.factor);
       const rFactor = Number(readHistory.factor);
@@ -335,13 +337,24 @@
       ctx.textBaseline = 'top';
       ctx.fillText(label, labelW - 6, 0);
       ctx.textBaseline = 'bottom';
-      ctx.fillText('0 GB', labelW - 6, h);
+      ctx.fillText('0 GB', labelW - 6, chartH);
+
+      // Date labels
+      const formatDate = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      const startDate = new Date(writeHistory.first.replace(' ', 'T') + 'Z');
+      const endDate = new Date(writeHistory.last.replace(' ', 'T') + 'Z');
+      ctx.fillStyle = '#444';
+      ctx.textBaseline = 'bottom';
+      ctx.textAlign = 'left';
+      ctx.fillText(formatDate(startDate), labelW, h);
+      ctx.textAlign = 'right';
+      ctx.fillText(formatDate(endDate), w, h);
 
       function drawBars(vals, color) {
         ctx.fillStyle = color;
         for (let i = 0; i < vals.length; i++) {
-          const barH = (vals[i] / max) * h;
-          ctx.fillRect(labelW + i * barW, h - barH, barW - 1, barH);
+          const barH = (vals[i] / max) * chartH;
+          ctx.fillRect(labelW + i * barW, chartH - barH, barW - 1, barH);
         }
       }
 
