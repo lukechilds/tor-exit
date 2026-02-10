@@ -18,7 +18,7 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./exit-notice.html:/srv/index.html:ro
+      - ./static:/srv:ro
       - caddy_data:/data
       - caddy_config:/config
 

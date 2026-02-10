@@ -1,4 +1,5 @@
 tor-exit.lu.ke {
 	root * /srv
+	try_files {path} /index.html
 	file_server
 }
