@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tor Exit Node</title>
+  <meta name="description" content="This is a Tor exit relay.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -272,6 +273,7 @@
     </div>
   </main>
 
+  <!--ONIONOO_PAYLOAD-->
   <script>
     const FINGERPRINT = 'DE529B21A8A67AB8CA40329044FB4708D39E437C';
     const API = 'https://onionoo.torproject.org';
@@ -341,7 +343,6 @@
       ctx.textBaseline = 'bottom';
       ctx.fillText('0 GB', labelW - 6, chartH);
 
-      // Date labels
       const formatDate = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
       const startDate = new Date(writeHistory.first.replace(' ', 'T') + 'Z');
       const endDate = new Date(writeHistory.last.replace(' ', 'T') + 'Z');
@@ -364,65 +365,71 @@
       drawBars(readVals, 'rgba(126, 87, 194, 0.8)');
     }
 
-    async function load() {
-      try {
-        const [details, bw] = await Promise.all([
-          fetch(`${API}/details?lookup=${FINGERPRINT}`).then(r => r.json()),
-          fetch(`${API}/bandwidth?lookup=${FINGERPRINT}`).then(r => r.json()),
-        ]);
+    function render(data) {
+      const relay = data.details.relays[0];
+      if (!relay) return;
 
-        const relay = details.relays[0];
-        if (!relay) return;
+      const indicator = document.getElementById('status-indicator');
+      indicator.className = 'indicator ' + (relay.running ? 'online' : 'offline');
 
-        const indicator = document.getElementById('status-indicator');
-        indicator.classList.add(relay.running ? 'online' : 'offline');
+      document.getElementById('nickname').textContent = relay.nickname;
+      document.getElementById('fingerprint').textContent = relay.fingerprint;
+      document.getElementById('online-since').textContent = formatDuration(relay.first_seen);
+      document.getElementById('version').textContent = relay.version;
 
-        document.getElementById('nickname').textContent = relay.nickname;
-        document.getElementById('fingerprint').textContent = relay.fingerprint;
-        document.getElementById('online-since').textContent = formatDuration(relay.first_seen);
-        document.getElementById('version').textContent = relay.version;
+      const flagsEl = document.getElementById('flags');
+      flagsEl.innerHTML = '';
+      relay.flags.forEach(f => {
+        const el = document.createElement('span');
+        el.className = 'flag';
+        el.textContent = f;
+        flagsEl.appendChild(el);
+      });
 
-        const flagsEl = document.getElementById('flags');
-        relay.flags.forEach(f => {
-          const el = document.createElement('span');
-          el.className = 'flag';
-          el.textContent = f;
-          flagsEl.appendChild(el);
-        });
-
-        const bwRelay = bw.relays[0];
-        if (bwRelay) {
-          let totalBytes = 0;
-          const periods = ['5_years', '1_year', '6_months', '1_month'];
-          const usedPeriod = periods.find(p => bwRelay.write_history[p]);
-          if (usedPeriod) {
-            const wh = bwRelay.write_history[usedPeriod];
-            const rh = bwRelay.read_history[usedPeriod];
-            const interval = wh.interval;
-            wh.values.forEach(v => { totalBytes += (v || 0) * wh.factor * interval; });
-            rh.values.forEach(v => { totalBytes += (v || 0) * rh.factor * interval; });
-          }
-          document.getElementById('total-bandwidth').textContent = formatBytes(totalBytes);
+      const bwRelay = data.bandwidth.relays[0];
+      if (bwRelay) {
+        let totalBytes = 0;
+        const periods = ['5_years', '1_year', '6_months', '1_month'];
+        const usedPeriod = periods.find(p => bwRelay.write_history[p]);
+        if (usedPeriod) {
+          const wh = bwRelay.write_history[usedPeriod];
+          const rh = bwRelay.read_history[usedPeriod];
+          const interval = wh.interval;
+          wh.values.forEach(v => { totalBytes += (v || 0) * wh.factor * interval; });
+          rh.values.forEach(v => { totalBytes += (v || 0) * rh.factor * interval; });
         }
+        document.getElementById('total-bandwidth').textContent = formatBytes(totalBytes);
+      }
 
-        document.getElementById('relay-info').classList.remove('hidden');
+      document.getElementById('relay-info').classList.remove('hidden');
 
-        if (bwRelay) {
-          const chartPeriod = ['5_years', '1_year', '6_months', '1_month'].find(p => bwRelay.write_history[p]);
-          if (chartPeriod) {
-            drawChart(
-              document.getElementById('chart'),
-              bwRelay.write_history[chartPeriod],
-              bwRelay.read_history[chartPeriod],
-            );
-          }
+      if (bwRelay) {
+        const chartPeriod = ['5_years', '1_year', '6_months', '1_month'].find(p => bwRelay.write_history[p]);
+        if (chartPeriod) {
+          drawChart(
+            document.getElementById('chart'),
+            bwRelay.write_history[chartPeriod],
+            bwRelay.read_history[chartPeriod],
+          );
         }
-      } catch (e) {
-        // Stats unavailable, page still works as a static notice
       }
     }
 
-    load();
+    if (window.__ONIONOO_DATA__) {
+      render(window.__ONIONOO_DATA__);
+    }
+
+    (async () => {
+      try {
+        const [details, bandwidth] = await Promise.all([
+          fetch(`${API}/details?lookup=${FINGERPRINT}`).then(r => r.json()),
+          fetch(`${API}/bandwidth?lookup=${FINGERPRINT}`).then(r => r.json()),
+        ]);
+        render({ details, bandwidth });
+      } catch (e) {
+        // Stats unavailable, page still works as a static notice
+      }
+    })();
   </script>
 </body>
 </html>

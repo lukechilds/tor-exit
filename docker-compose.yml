@@ -18,10 +18,21 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./static:/srv:ro
+      - www:/srv:ro
       - caddy_data:/data
       - caddy_config:/config
+
+  stats-updater:
+    image: oven/bun:1.2.4-alpine@sha256:9028ee7a60a04777190f0c3129ce49c73384d3fc918f3e5c75f5af188e431981
+    container_name: tor-exit-stats
+    restart: always
+    volumes:
+      - ./update-stats.js:/update-stats.js:ro
+      - ./static:/template:ro
+      - www:/www
+    command: bun run /update-stats.js
 
 volumes:
   caddy_data:
   caddy_config:
+  www:
