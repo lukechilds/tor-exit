@@ -18,7 +18,7 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - www:/srv:ro
+      - ./static:/srv:ro
       - caddy_data:/data
       - caddy_config:/config
 
@@ -28,11 +28,9 @@ services:
     restart: always
     volumes:
       - ./update-stats.js:/update-stats.js:ro
-      - ./static:/template:ro
-      - www:/www
+      - ./static:/srv
     command: bun run /update-stats.js
 
 volumes:
   caddy_data:
   caddy_config:
-  www:

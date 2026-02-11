@@ -1,30 +1,10 @@
-import { readFileSync, writeFileSync, existsSync, mkdirSync, cpSync, readdirSync, renameSync, copyFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, writeFileSync, renameSync } from 'fs';
 
 const API = 'https://onionoo.torproject.org';
-const TEMPLATE_DIR = process.env.TEMPLATE_DIR || '/template';
-const OUTPUT_DIR = process.env.OUTPUT_DIR || '/www';
-
-function syncStaticFiles() {
-  mkdirSync(OUTPUT_DIR, { recursive: true });
-  for (const item of readdirSync(TEMPLATE_DIR)) {
-    if (item === 'index.html') continue;
-    cpSync(join(TEMPLATE_DIR, item), join(OUTPUT_DIR, item), { recursive: true });
-  }
-}
+const HTML_PATH = process.env.HTML_PATH || '/srv/index.html';
 
 async function update() {
-  const templatePath = join(TEMPLATE_DIR, 'index.html');
-  const outputPath = join(OUTPUT_DIR, 'index.html');
-
-  syncStaticFiles();
-
-  if (!existsSync(outputPath)) {
-    copyFileSync(templatePath, outputPath);
-    console.log('Copied template as initial index.html');
-  }
-
-  let html = readFileSync(templatePath, 'utf-8');
+  let html = readFileSync(HTML_PATH, 'utf-8');
   const fingerprint = html.match(/const FINGERPRINT = '([A-F0-9]+)'/)?.[1];
   if (!fingerprint) throw new Error('Could not find FINGERPRINT in template');
 
@@ -42,11 +22,14 @@ async function update() {
   let payload = JSON.stringify({ details, bandwidth });
   payload = payload.replaceAll('</script>', '<\\/script>');
   payload = payload.replaceAll('<!--', '<\\!--');
-  html = html.replace('<!--ONIONOO_PAYLOAD-->', `<script>window.__ONIONOO_DATA__=${payload};</script>`);
+  html = html.replace(
+    /<!--ONIONOO-->[\s\S]*?<!--\/ONIONOO-->/,
+    `<!--ONIONOO--><script>window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`
+  );
 
-  const tmpPath = outputPath + '.tmp';
+  const tmpPath = HTML_PATH + '.tmp';
   writeFileSync(tmpPath, html);
-  renameSync(tmpPath, outputPath);
+  renameSync(tmpPath, HTML_PATH);
 
   console.log(`Updated: ${details.relays[0].nickname}`);
 }
