@@ -1,10 +1,11 @@
 import { readFileSync, writeFileSync, renameSync } from 'fs';
 
 const API = 'https://onionoo.torproject.org';
-const HTML_PATH = process.env.HTML_PATH || '/srv/index.html';
+const TEMPLATE_PATH = process.env.TEMPLATE_PATH || '/srv/index.template.html';
+const OUTPUT_PATH = process.env.OUTPUT_PATH || '/srv/index.html';
 
 async function update() {
-  let html = readFileSync(HTML_PATH, 'utf-8');
+  let html = readFileSync(TEMPLATE_PATH, 'utf-8');
   const fingerprint = html.match(/const FINGERPRINT = '([A-F0-9]+)'/)?.[1];
   if (!fingerprint) throw new Error('Could not find FINGERPRINT in template');
 
@@ -22,14 +23,12 @@ async function update() {
   let payload = JSON.stringify({ details, bandwidth });
   payload = payload.replaceAll('</script>', '<\\/script>');
   payload = payload.replaceAll('<!--', '<\\!--');
-  html = html.replace(
-    /<!--ONIONOO-->[\s\S]*?<!--\/ONIONOO-->/,
-    `<!--ONIONOO--><script>window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`
-  );
+  html = html.replace('<!--ONIONOO--><!--/ONIONOO-->',
+    `<!--ONIONOO--><script>window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`);
 
-  const tmpPath = HTML_PATH + '.tmp';
+  const tmpPath = OUTPUT_PATH + '.tmp';
   writeFileSync(tmpPath, html);
-  renameSync(tmpPath, HTML_PATH);
+  renameSync(tmpPath, OUTPUT_PATH);
 
   console.log(`Updated: ${details.relays[0].nickname}`);
 }
