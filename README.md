@@ -4,6 +4,8 @@
 
 This is my Tor exit node configuration that I run at [tor-exit.lu.ke](https://tor-exit.lu.ke/). Provided here as a docker compose configuration you can run in one command.
 
+If you're thinking of running a Tor exit node, make sure you understand the risks and [read this](https://blog.torproject.org/tips-running-exit-node/) first.
+
 ## Overview
 
 - Tor built from source with a pinned version for reproducibility
