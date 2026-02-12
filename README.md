@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="media/logo.svg" width="80" alt="tor-exit">
-</p>
-
 # tor-exit
 
 > Single command Tor exit node setup
