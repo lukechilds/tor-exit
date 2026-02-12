@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Abuse Response &ndash; Tor Exit Node</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    main {
+      max-width: 600px;
+      width: 100%;
+    }
+    a {
+      color: #7e57c2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+    h2 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #7e57c2;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p, li {
+      font-size: 0.8125rem;
+      color: #999;
+      margin-bottom: 0.75rem;
+    }
+    ul {
+      padding-left: 1.25rem;
+    }
+    li {
+      margin-bottom: 0.375rem;
+    }
+    .back {
+      display: inline-block;
+      font-size: 0.8125rem;
+      margin-bottom: 1.25rem;
+      color: #555;
+    }
+    .separator {
+      border: none;
+      border-top: 1px solid #222;
+      margin: 1.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="/">&larr; Back</a>
+    <h1>Abuse Response</h1>
+
+    <p>
+      Thank you for contacting us. The IP address you have identified is a
+      <a target="_blank" href="https://www.torproject.org/">Tor</a> exit node.
+      This server does not originate any traffic of its own &mdash; it relays
+      traffic for users of the Tor anonymity network, which is used daily by
+      millions of people worldwide, including journalists, activists,
+      whistleblowers, law enforcement, and ordinary individuals who value their
+      online privacy.
+    </p>
+
+    <p>
+      The operator of this relay has no knowledge of, control over, or logs of
+      the traffic passing through it. This is by design &mdash; the Tor network
+      is specifically built so that tracing traffic back to individual users is
+      not possible, even by relay operators. There is nothing we can provide in
+      response to a subpoena or discovery request.
+    </p>
+
+    <p>
+      Blocking this IP address will not meaningfully affect the abuser &mdash;
+      their traffic will simply exit through one of the
+      <a target="_blank" href="https://metrics.torproject.org/rs.html#search/flag:Exit">many other exit relays</a>
+      on the network. Instead, it will only impact legitimate Tor users who
+      happen to be routed through this node.
+    </p>
+
+    <h2>Recommended actions</h2>
+    <ul>
+      <li>
+        For <strong>spam or automated abuse</strong>, consider using CAPTCHAs,
+        rate limiting, or the Tor
+        <a target="_blank" href="https://www.torproject.org/projects/tordnsel.html.en">DNSRBL</a>
+        to flag or restrict posts from Tor exits without blocking them outright.
+      </li>
+      <li>
+        For <strong>brute-force or login attacks</strong>, standard defenses
+        like fail2ban, rate limiting, and two-factor authentication are more
+        effective than blocking individual IPs.
+      </li>
+      <li>
+        For <strong>account compromise</strong>, treat this as a credential
+        issue &mdash; reset passwords and review account security. The attacker
+        likely obtained credentials through phishing or a data breach, not
+        through the Tor network itself.
+      </li>
+      <li>
+        For <strong>scraping or DDoS</strong>, a bulk list of Tor exit IPs is
+        available via the
+        <a target="_blank" href="https://check.torproject.org/torbulkexitlist">Tor Bulk Exit List</a>
+        for use in rate-limiting or filtering rules.
+      </li>
+    </ul>
+
+    <hr class="separator">
+
+    <p>
+      For more information, see the
+      <a target="_blank" href="https://community.torproject.org/relay/community-resources/eff-tor-legal-faq/">EFF&rsquo;s legal FAQ on Tor</a>
+      and the
+      <a target="_blank" href="https://community.torproject.org/relay/community-resources/tor-abuse-templates/">Tor Project&rsquo;s abuse response templates</a>.
+    </p>
+  </main>
+</body>
+</html>
