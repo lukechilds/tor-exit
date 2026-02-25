@@ -23,7 +23,11 @@ async function update() {
   let payload = JSON.stringify({ details, bandwidth });
   payload = payload.replaceAll('</script>', '<\\/script>');
   payload = payload.replaceAll('<!--', '<\\!--');
-  html = html.replace('<!--ONIONOO--><!--/ONIONOO-->',
+  const markerRe = /<!--ONIONOO-->([\s\S]*?)<!--\/ONIONOO-->/;
+  if (!markerRe.test(html)) {
+    throw new Error('Could not find ONIONOO markers in template');
+  }
+  html = html.replace(markerRe,
     `<!--ONIONOO--><script>window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`);
 
   const tmpPath = OUTPUT_PATH + '.tmp';
