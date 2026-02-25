@@ -41,7 +41,7 @@ or if you use `tmux` run `bash dashboard.sh`:
 
 ## Configuration
 
-Tor is configured by editing [torrc](torrc). You will also want to add your fingerprint to [static/index.template.html](static/index.template.html) to pull through live stats. And update [Caddyfile](Caddyfile) with your domain for automatic SSL certification provisioning.
+Everything should work out of the box but if you want to make changes Tor is configured by editing [torrc](torrc). You will also want to add your fingerprint to [static/index.template.html](static/index.template.html) to pull through live stats. And update [Caddyfile](Caddyfile) with your domain for automatic SSL certification provisioning.
 
 ## License
 
