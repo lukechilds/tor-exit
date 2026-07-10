@@ -1,6 +1,6 @@
 FROM debian:trixie-slim AS builder
 
-ARG TOR_VERSION=0.4.8.21
+ARG TOR_VERSION=0.4.9.11
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential automake autoconf libtool pkg-config \
