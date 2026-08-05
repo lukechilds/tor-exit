@@ -367,7 +367,8 @@
 
       document.getElementById('nickname').textContent = relay.nickname;
       document.getElementById('fingerprint').textContent = relay.fingerprint;
-      document.getElementById('online-since').textContent = formatDuration(relay.first_seen);
+      const firstSeen = window.__FIRST_SEEN_OVERRIDE__ || relay.first_seen;
+      document.getElementById('online-since').textContent = formatDuration(firstSeen);
       document.getElementById('version').textContent = relay.version;
 
       const flagsEl = document.getElementById('flags');

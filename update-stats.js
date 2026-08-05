@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, renameSync } from 'fs';
 const API = 'https://onionoo.torproject.org';
 const TEMPLATE_PATH = process.env.TEMPLATE_PATH || '/srv/index.template.html';
 const OUTPUT_PATH = process.env.OUTPUT_PATH || '/srv/index.html';
+const FIRST_SEEN_OVERRIDE = '2025-09-01 00:00:00';
 
 async function update() {
   let html = readFileSync(TEMPLATE_PATH, 'utf-8');
@@ -23,12 +24,13 @@ async function update() {
   let payload = JSON.stringify({ details, bandwidth });
   payload = payload.replaceAll('</script>', '<\\/script>');
   payload = payload.replaceAll('<!--', '<\\!--');
+  const firstSeenOverride = JSON.stringify(FIRST_SEEN_OVERRIDE);
   const markerRe = /<!--ONIONOO-->([\s\S]*?)<!--\/ONIONOO-->/;
   if (!markerRe.test(html)) {
     throw new Error('Could not find ONIONOO markers in template');
   }
   html = html.replace(markerRe,
-    `<!--ONIONOO--><script>window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`);
+    `<!--ONIONOO--><script>window.__FIRST_SEEN_OVERRIDE__=${firstSeenOverride};window.__ONIONOO_DATA__=${payload}</script><!--/ONIONOO-->`);
 
   const tmpPath = OUTPUT_PATH + '.tmp';
   writeFileSync(tmpPath, html);
