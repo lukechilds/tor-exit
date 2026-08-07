@@ -28,6 +28,7 @@ services:
     restart: always
     volumes:
       - ./update-stats.js:/update-stats.js:ro
+      - ./historical-bandwidth.json:/historical-bandwidth.json:ro
       - ./static:/srv
     command: bun run /update-stats.js
 

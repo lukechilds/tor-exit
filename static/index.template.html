@@ -348,9 +348,10 @@
 
       function drawBars(vals, color) {
         ctx.fillStyle = color;
+        const drawnBarW = Math.max(barW - 1, barW * 0.8);
         for (let i = 0; i < vals.length; i++) {
           const barH = (vals[i] / max) * chartH;
-          ctx.fillRect(labelW + i * barW, chartH - barH, barW - 1, barH);
+          ctx.fillRect(labelW + i * barW, chartH - barH, drawnBarW, barH);
         }
       }
 
@@ -411,19 +412,19 @@
 
     if (window.__ONIONOO_DATA__) {
       render(window.__ONIONOO_DATA__);
+    } else {
+      (async () => {
+        try {
+          const [details, bandwidth] = await Promise.all([
+            fetch(`${API}/details?lookup=${FINGERPRINT}`).then(r => r.json()),
+            fetch(`${API}/bandwidth?lookup=${FINGERPRINT}`).then(r => r.json()),
+          ]);
+          render({ details, bandwidth });
+        } catch (e) {
+          // Stats unavailable, page still works as a static notice
+        }
+      })();
     }
-
-    (async () => {
-      try {
-        const [details, bandwidth] = await Promise.all([
-          fetch(`${API}/details?lookup=${FINGERPRINT}`).then(r => r.json()),
-          fetch(`${API}/bandwidth?lookup=${FINGERPRINT}`).then(r => r.json()),
-        ]);
-        render({ details, bandwidth });
-      } catch (e) {
-        // Stats unavailable, page still works as a static notice
-      }
-    })();
   </script>
 </body>
 </html>
